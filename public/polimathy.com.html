@@ -1,0 +1,357 @@
+
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Polimathy - Sesiones Extendidas</title>
+<style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #7851a9;
+      color: #ffffff;
+    }
+    h1 { text-align: center; margin-bottom: 20px; font-size:2em; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .card {
+          background: #6e4eaa;
+          border-radius: 6px;
+          padding: 16px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+          cursor: pointer;
+          transition: transform .2s, background .2s;
+          text-align: center;
+          color: #ffffff;
+        }
+        #view-classes .card {
+          min-height: 120px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+        }
+        #view-careers .card, #view-blocks .card {
+          min-height: 60px;
+        }
+    .card:hover {
+      transform: translateY(-4px);
+      background: #9272c1;
+    }
+    .back {
+      margin-bottom: 12px;
+      display: inline-block;
+      cursor: pointer;
+      color: #e0d4f7;
+      font-weight: bold;
+    }
+    .hidden { display: none; }
+    .content {
+      background: #6e4eaa;
+      padding: 16px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      color: #ffffff;
+    }
+    .placeholder {
+      margin: 12px 0;
+      padding: 12px;
+      border: 2px dashed #bba5df;
+      border-radius: 6px;
+      color: #e0d4f7;
+      text-align: center;
+    }
+  
+    .card {
+          background: #6e4eaa;
+          border-radius: 6px;
+          padding: 16px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+          cursor: pointer;
+          transition: transform .2s, background .2s;
+          text-align: center;
+          color: #ffffff;
+        }
+        #view-classes .card {
+          min-height: 120px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+        }
+        #view-careers .card, #view-blocks .card {
+          min-height: 60px;
+        }
+    </style>
+</head>
+<body>
+<h1>Polimathy</h1>
+<div class="grid" id="view-careers"></div>
+<div class="hidden" id="view-blocks">
+<span class="back" onclick="showCareers()">← Volver a Carreras</span>
+<h2 id="blocks-title"></h2>
+<div class="grid" id="blocks-list"></div>
+</div>
+<div class="hidden" id="view-classes">
+<span class="back" onclick="showBlocks()">← Volver a Bloques</span>
+<h2 id="classes-title"></h2>
+<div class="grid" id="classes-list"></div>
+</div>
+<div class="hidden" id="view-lessons">
+<span class="back" onclick="showClasses()">← Volver a Clases</span>
+<h3 id="lessons-title"></h3>
+<div class="grid" id="lessons-list"></div>
+</div>
+<div class="hidden" id="view-detail">
+<span class="back" onclick="showLessons()">← Volver a Sesiones</span>
+<h4 id="detail-title"></h4>
+<div class="content" id="detail-content"></div>
+</div>
+<script>
+    const careers = ["Ciencia Política", "Historia Política Colombiana", "Sociología", "Antropología", "Marketing Político", "Administración Pública", "Investigación para la Paz", "Resolución de Conflictos", "Trabajo Social", "Comunicación Social", "Periodismo", "Filosofía", "Economía", "Administración de Empresas", "Música", "Química", "Física", "Teología", "Biología", "Psicología", "Historia de la Medicina"];
+    const totalBlocks = 10;
+    const classesPerBlock = 7;
+    const sessionsPerClass = 22;
+    let currentCareer, currentBlock, currentClass, currentSession;
+
+    function showCareers() {
+      ['view-blocks','view-classes','view-lessons','view-detail'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      const container = document.getElementById('view-careers');
+      container.innerHTML = '';
+      careers.forEach(career => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerText = career;
+        card.onclick = () => { currentCareer = career; showBlocks(); };
+        container.appendChild(card);
+      });
+      container.classList.remove('hidden');
+    }
+
+    function showBlocks() {
+      document.getElementById('view-careers').classList.add('hidden');
+      ['view-classes','view-lessons','view-detail'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      document.getElementById('blocks-title').innerText = currentCareer + ' - Bloques Académicos';
+      const list = document.getElementById('blocks-list');
+      list.innerHTML = '';
+      for (let b = 1; b <= totalBlocks; b++) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerText = 'Bloque Académico ' + b;
+        card.onclick = () => { currentBlock = b; showClasses(); };
+        list.appendChild(card);
+      }
+      document.getElementById('view-blocks').classList.remove('hidden');
+    }
+
+    
+    
+    function showClasses() {
+      if (currentCareer !== "Ciencia Política") {
+        alert("Esta carrera estará disponible muy pronto.");
+        return;
+      }
+      document.getElementById('view-blocks').classList.add('hidden');
+      ['view-lessons','view-detail'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      document.getElementById('classes-title').innerText = currentCareer + ' - Bloque ' + currentBlock + ' - Clases';
+      const list = document.getElementById('classes-list');('classes-list');
+      list.innerHTML = '';
+      const allClassTitles = {
+"1": ['Clase 1: Introdución a la Ciencia politica', 'Clase 2: Lo politico , la ciencia y la ciencia Politica', 'Clase 3: El papel del politologo', 'Clase 4: Introducción a la economia politica', 'Clase 5: Epistemologia de las ciencia Sociales', 'Clase 6: Etica Y Politica', 'Clase 7: Vocabulario de la ciencia politica'],
+"2": ['Clase 1: Grandes Hitos en el desarrollo de la ciencia politica', 'Clase 2: Enfoques 1 . Los enfoques que priviliegian el interior del ser humano', 'Clase 3: Relaciones Intenernacionales ¿ una rama de la ciencia polica?', 'Clase 4: Paradigmas de la economia politca', 'Clase 5: Politica Comparada', 'Clase 6: Pensamiento politico Antiguo', 'Clase 7: Filosofia Politica'],
+"3": ['Clase 1: Teorias de elección Publica', 'Clase 2: Enfoques 2 . Los enfoques que priviliegian el interior del ser humano', 'Clase 3: Paradigmas de las  Relaciones internacionales para politologos 1', 'Clase 4: Enques de economia politica', 'Clase 5: Seminario de Escritura 1', 'Clase 6: Filosofia de la ciencia para Politologos', 'Clase 7: Comunicación Politica y socieda'],
+"4": ['Clase 1: Teorias de Estado', 'Clase 2: Enfoques 3 . Los enfoques que priviliegian el interior del ser humano', 'Clase 3: Paradigmas de las  Relaciones internacionales para politologos 2', 'Clase 4: Macroeconomia para politologos', 'Clase 5: Seminario de Escritura 2', 'Clase 6: Sistemas Politicos', 'Clase 7: Investigación cualitaiva 1'],
+"5": ['Clase 1: Teorias de la Democracia', 'Clase 2: Enfoques 4 . Los enfoques que priviliegian el interior del ser humano', 'Clase 3: Macromoldes 1', 'Clase 4: Microeconomia para polotolgos', 'Clase 5: Apriximación a  las politicas Publicas 1', 'Clase 6: Sistemas Electorales', 'Clase 7: Investigación cualitaiva 2']
+};
+      const classTitles = allClassTitles[currentBlock.toString()];
+      for (let c = 0; c < classTitles.length; c++) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerText = classTitles[c];
+        card.onclick = () => { currentClass = c + 1; showLessons(); };
+        list.appendChild(card);
+      }
+      document.getElementById('view-classes').classList.remove('hidden');
+    }
+    
+    
+
+    function showLessons() {
+      document.getElementById('view-classes').classList.add('hidden');
+      ['view-detail'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      document.getElementById('lessons-title').innerText = currentCareer + ' - Bloque ' + currentBlock + ' - Clase ' + currentClass + ' - Sesiones';
+      const list = document.getElementById('lessons-list');
+      list.innerHTML = '';
+      for (let s = 1; s <= sessionsPerClass; s++) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        if (s <= 10) {
+          card.innerText = 'Lección ' + s;
+        } else if (s === 11) {
+          card.innerText = 'Parcial progreso';
+        } else if (s <= 21) {
+          card.innerText = 'Lección ' + (s - 1);
+        } else {
+          card.innerText = 'Parcial Final';
+        }
+        card.onclick = () => { currentSession = s; showDetail(); };
+        list.appendChild(card);
+      }
+      document.getElementById('view-lessons').classList.remove('hidden');
+    }
+
+    
+    
+    let steps = [];
+    let currentStep = 0;
+
+    function renderStep() {
+      const content = document.getElementById('detail-content');
+      content.innerHTML = '';
+      // Step placeholder
+      const stepText = steps[currentStep];
+      const item = document.createElement('div');
+      item.className = 'placeholder';
+      item.innerText = stepText;
+      content.appendChild(item);
+      // Navigation buttons
+      const nav = document.createElement('div');
+      nav.style.marginTop = '12px';
+      nav.style.textAlign = 'center';
+      if (currentStep > 0) {
+        const prev = document.createElement('button');
+        prev.innerText = 'Anterior';
+        prev.onclick = () => { currentStep--; renderStep(); };
+        nav.appendChild(prev);
+      }
+      if (currentStep < steps.length - 1) {
+        const next = document.createElement('button');
+        next.style.marginLeft = '10px';
+        next.innerText = 'Siguiente';
+        next.onclick = () => { currentStep++; renderStep(); };
+        nav.appendChild(next);
+      }
+      // Finalizar Lección button at last step
+      if (currentStep === steps.length - 1) {
+        const finish = document.createElement('button');
+        finish.style.marginLeft = '10px';
+        finish.innerText = 'Finalizar Lección';
+        finish.onclick = () => { showLessons(); };
+        nav.appendChild(finish);
+      }
+      content.appendChild(nav);
+    }
+
+    function showDetail() {
+      document.getElementById('view-lessons').classList.add('hidden');
+      const detailTitle = document.getElementById('detail-title');
+      let title = '';
+      // Determine title text
+      if (currentSession <= 10) {
+        title = 'Lección ' + currentSession;
+      } else if (currentSession === 11) {
+        title = 'Parcial progreso';
+      } else if (currentSession <= 21) {
+        title = 'Lección ' + (currentSession - 1);
+      } else {
+        title = 'Parcial Final';
+      }
+      detailTitle.innerText = `${currentCareer} - Bloque ${currentBlock} - Clase ${currentClass} - ${title}`;
+      // Build steps array
+      steps = [];
+      if ((currentSession <= 10) || (currentSession > 11 && currentSession <= 21)) {
+        // lessons
+        for (let i = 1; i <= 3; i++) {
+          steps.push('Video ' + i);
+          steps.push('Quiz video ' + i);
+          steps.push('Lectura ' + i);
+          steps.push('Quiz lectura ' + i);
+        }
+      } else if (currentSession === 11) {
+        // Parcial progreso: 20 questions
+        for (let q = 1; q <= 20; q++) {
+          steps.push('Pregunta ' + q);
+        }
+      } else {
+        // Parcial Final: 50 questions
+        for (let q = 1; q <= 50; q++) {
+          steps.push('Pregunta ' + q);
+        }
+      }
+      currentStep = 0;
+      renderStep();
+      document.getElementById('view-detail').classList.remove('hidden');
+    }
+
+    showCareers();
+  </script>
+<style>
+  .otis {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+    z-index: 9999;
+    opacity: 0.95;
+  }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  const otisImages = ["Otis Pencil.png", "Otis leyendo.png", "Otis Wave.png", "Otis Tablet.png"];
+  let otisIndex = 0;
+  let otis;
+
+  function updateOtis() {
+    if (otis) otis.remove();
+    otis = document.createElement("img");
+    otis.className = "otis center-otis";
+    otis.src = otisImages[otisIndex];
+    document.body.appendChild(otis);
+    otisIndex = (otisIndex + 1) % otisImages.length;
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    updateOtis();
+    setInterval(updateOtis, 2000);
+  });
+</script>
+<style>
+  .otis {
+    position: fixed;
+    width: 160px;
+    height: 160px;
+    object-fit: contain;
+    z-index: 9999;
+    opacity: 0.95;
+  }
+  .center-otis {
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 20px;
+  }
+</style>
+
+</body>
+</html>
